@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# manual: git log --pretty=oneline
+#
+# @author Jun Futagawa
+
+LIST=$(git show-ref | grep " refs/remotes/tags" | grep -v "@")
+
+IFS='
+'
+for i in ${LIST}
+do
+    HASH=$(echo ${i} | cut -d ' ' -f 1)
+    REMOTES_TAG_PATH=$(echo ${i} | cut -d ' ' -f 2-)
+    VERSION=$(echo ${i} | cut -d '/' -f 4)
+    # echo "${VERSION}"
+    MESSAGE=$(git show --pretty=oneline ${HASH} | head -1 | cut -d ' ' -f 2-)
+    GIT_COMMITTER_DATE=$(git show --date=default --format="%at" ${HASH} | head -1)
+    # echo "-> ${MESSAGE}"
+    echo "GIT_COMMITTER_DATE='${GIT_COMMITTER_DATE}' git tag -a ${VERSION} -m '${MESSAGE}'"
+done

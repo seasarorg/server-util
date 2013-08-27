@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+GITHUB="git@github.com"
+
+USER_NAME="$1"
+REPOSITORY_NAME="$2"
+
+if [ -z ${REPOSITORY_NAME} ]; then
+    echo $0 USER_NAME REPOSITORY_NAME
+    exit 1
+fi
+
+IS_ALREADY=$(grep '[remote "origin"]' .git/config | wc -l)
+if [[ ${IS_ALREADY} -eq 0 ]]; then
+    REMOTE_NAME="origin"
+else 
+    REMOTE_NAME="${USER_NAME}"
+fi
+
+echo "[push to ${REMOTE_NAME}]"
+git remote add "${REMOTE_NAME}" "${GITHUB}:${USER_NAME}/${REPOSITORY_NAME}.git"
+git push "${REMOTE_NAME}" master
+git push "${REMOTE_NAME}" refs/tags/*
