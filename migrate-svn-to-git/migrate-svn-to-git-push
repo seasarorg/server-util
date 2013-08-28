@@ -12,7 +12,7 @@ if [ -z ${REPOSITORY_NAME} ]; then
     exit 1
 fi
 
-IS_ALREADY=$(grep '[remote "origin"]' .git/config | wc -l)
+IS_ALREADY=$(grep '\[remote "origin"\]' .git/config | wc -l)
 if [[ ${IS_ALREADY} -eq 0 ]]; then
     REMOTE_NAME="origin"
 else 

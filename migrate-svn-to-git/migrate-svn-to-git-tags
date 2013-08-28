@@ -17,5 +17,5 @@ do
     MESSAGE=$(git show --pretty=oneline ${HASH} | head -1 | cut -d ' ' -f 2-)
     GIT_COMMITTER_DATE=$(git show --date=default --format="%at" ${HASH} | head -1)
     # echo "-> ${MESSAGE}"
-    echo "GIT_COMMITTER_DATE='${GIT_COMMITTER_DATE}' git tag -a ${VERSION} -m '${MESSAGE}'"
+    echo "GIT_COMMITTER_DATE='${GIT_COMMITTER_DATE}' git tag -a ${VERSION} -m '${MESSAGE}' ${HASH}"
 done
