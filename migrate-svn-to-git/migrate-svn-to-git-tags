@@ -11,10 +11,10 @@ function debug() {
     fi
 }
 
-TAG_LIST=$(git show-ref | grep " refs/remotes/tags" | grep -v "@")
-
 IFS='
 '
+
+TAG_LIST=$(git show-ref | grep " refs/remotes/tags" | grep -v "@")
 for i in ${TAG_LIST}
 do
     TAG_HASH=$(echo ${i} | cut -d ' ' -f 1)
@@ -24,21 +24,26 @@ do
     debug "VERSION: ${VERSION}"
     debug "TAG_HASH: ${TAG_HASH}"
 
-    PARENT_SVN_COMMIT_ID=$(git log -1 --format='%b' ${TAG_HASH}^ | grep 'git-svn-id' | grep -o -e '@[0-9]*')
+    # file:///.../NAME/svn/tags/
+    # PARENT_SVN_COMMIT_ID=$(git log --format='%b' ${REMOTES_TAG_PATH} | egrep -v '/svn/tags/' | grep -v '^$' | head -1 | grep 'git-svn-id' | grep -o -e '@[0-9]*')
+    # https://.../svn/NAME/tags/
+    # https://.../svn/sandbox/NAME/tags/
+    PARENT_SVN_COMMIT_ID=$(git log --format='%b' ${REMOTES_TAG_PATH} | egrep -v '/svn/(sandbox/)?[a-zA-Z0-9_\-]*?/tags/' | grep -v '^$' | head -1 | grep 'git-svn-id' | grep -o -e '@[0-9]*')
     debug "PARENT_SVN_COMMIT_ID: ${PARENT_SVN_COMMIT_ID}"
+    debug "  git log --format='%b' ${REMOTES_TAG_PATH} | egrep -v '/svn/(sandbox/)?[a-zA-Z0-9_\-]*?/tags/' | grep -v '^$' | head -1"
 
     MESSAGE=$(git log -1 --format='%s' ${TAG_HASH} | grep -v git-svn-id)
     debug "MESSAGE: ${MESSAGE}"
 
     PARENT_COMMIT=$(git log -1 --format='%H %at %s' --grep "${PARENT_SVN_COMMIT_ID} " --branches)
     if [[ ${PARENT_COMMIT} = "" ]]; then
-        echo "# parent commit not found in branches"
-        debug "  parent commit not found in branches"
+        echo "# ${VERSION}: parent commit not found in branches"
+        debug "  ${VERSION}: parent commit not found in branches"
         PARENT_COMMIT=$(git log -1 --format='%H %at %s' --grep "${PARENT_SVN_COMMIT_ID} " --all)
     fi
     debug "PARENT_COMMIT: ${PARENT_COMMIT}"
     PARENT_TAG_HASH=$(echo ${PARENT_COMMIT} | cut -d ' ' -f 1)
-    GIT_COMMITTER_DATE=$(echo ${PARENT_COMMIT} | cut -d ' ' -f 2)
+    PARENT_COMMIT_DATE=$(echo ${PARENT_COMMIT} | cut -d ' ' -f 2)
 
-    echo "GIT_COMMITTER_DATE='${GIT_COMMITTER_DATE}' git tag -a ${VERSION} -m '${MESSAGE}' ${PARENT_TAG_HASH}"
+    echo "GIT_COMMITTER_DATE='${PARENT_COMMIT_DATE}' git tag -a ${VERSION} -m '${MESSAGE}' ${PARENT_TAG_HASH}"
 done

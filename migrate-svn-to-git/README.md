@@ -34,17 +34,16 @@ git-svn-id の情報を使用するため、migrate-svn-to-git-filter より先�
 
 ```
 $ migrate-svn-to-git-tags
-GIT_COMMITTER_DATE='1136764858' git tag -a 0.1 -m 'Tag S2Directory 0.1 release' 51b134c3cf5db7109faa02ac87a3204d937a9950
-GIT_COMMITTER_DATE='1146332040' git tag -a 0.2 -m 'Tag S2Directory 0.2 release' d25651788d9d41bb373e37ac548125d1523f846d
-GIT_COMMITTER_DATE='1146337792' git tag -a 0.2.1 -m 'Tag S2Directory 0.2.1 release' 17b7cd019f69c062a70cc116435912f073b5384c
-GIT_COMMITTER_DATE='1146495006' git tag -a 0.2.2 -m 'Tag S2Directory 0.2.2 release' 1d85f56d7b4e5c8a59fd2d672f1e9718b8b123db
-GIT_COMMITTER_DATE='1158898487' git tag -a 0.3 -m '' 4b4bbd7f2216a67379286308489a091ddced19c7
-GIT_COMMITTER_DATE='1158904419' git tag -a 0.3.1 -m 'S2Directory 0.3.1 release' de6059369ea83bee85775a37b0bb07815c119a84
-GIT_COMMITTER_DATE='1165812979' git tag -a 0.4 -m 'S2Directory 0.4 release' 7454bc0397e495f1bba484fbdd4be13ae7f39038
-GIT_COMMITTER_DATE='1167527646' git tag -a 0.5 -m 'S2Directory 0.5 release' 0fee61a770d9d03a70f094c24e066b89d77a144b
-GIT_COMMITTER_DATE='1184659354' git tag -a 0.5.1 -m 'S2Directory 0.5.1 release' 7562e1ed53240a6cf4a04920be1b4802d0ac3fdf
-# parent commit not found in branches
-GIT_COMMITTER_DATE='1198858530' git tag -a 0.6 -m 'S2Directory 0.6 release' 7072e42ecc1ebfb7a154b73325dbb083911cc2c8
+GIT_COMMITTER_DATE='1136764858' git tag -a 0.1 -m 'Tag S2Directory 0.1 release' d1d331720535dc4d936f8cbc704c1beb95c9150a
+GIT_COMMITTER_DATE='1146332040' git tag -a 0.2 -m 'Tag S2Directory 0.2 release' 2368b1168ae9bd7223dc568ed0b62b9c364bfc45
+GIT_COMMITTER_DATE='1146337792' git tag -a 0.2.1 -m 'Tag S2Directory 0.2.1 release' 157f71c6736d6e700da3938387373251a0ef3e2b
+GIT_COMMITTER_DATE='1146495006' git tag -a 0.2.2 -m 'Tag S2Directory 0.2.2 release' 1c0a8c54ff42eca2f9ecaeb8b2e73634cce4cd68
+GIT_COMMITTER_DATE='1158898487' git tag -a 0.3 -m '' 9ae030160a86fb39aec5a60fc679364141fef4ed
+GIT_COMMITTER_DATE='1158904419' git tag -a 0.3.1 -m 'S2Directory 0.3.1 release' fae91e71b8ef648f11f02ecb8a5d9f174e970ae7
+GIT_COMMITTER_DATE='1165812979' git tag -a 0.4 -m 'S2Directory 0.4 release' 7f520656618d0a086e6ddf070ef68719a2cd7f77
+GIT_COMMITTER_DATE='1167527646' git tag -a 0.5 -m 'S2Directory 0.5 release' e4fc97ae8592195ba94c6aa50f86feca6de15f65
+GIT_COMMITTER_DATE='1184659354' git tag -a 0.5.1 -m 'S2Directory 0.5.1 release' da3b523a0b2c047b7ac4899e9b1dbcc532e0a596
+GIT_COMMITTER_DATE='1213002755' git tag -a 0.6 -m 'S2Directory 0.6 release' 3469486766773ec3852b405e772f663c02259229
 # parent commit not found in branches
 GIT_COMMITTER_DATE='1205733081' git tag -a 0.6.1 -m 'S2Directory 0.6.1 release' 3d94b6d9087a6cb3beed431536c9c727feae9e58
 ```
