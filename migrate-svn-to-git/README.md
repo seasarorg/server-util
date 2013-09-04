@@ -63,6 +63,7 @@ $ GIT_COMMITTER_DATE='1146332857' git tag -a 0.2 -m 'Tag S2Directory 0.2 release
 
 * remove git-svn-id
 * replace empty commit messages
+* [branches only] remove empty commit
 
 ```
 $ migrate-svn-to-git-filter
