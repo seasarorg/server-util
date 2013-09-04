@@ -17,5 +17,5 @@ else
 fi' -f -- --all
 
 # [branches only] remove empty commit
-echo "remove empty commit"
-git filter-branch -f --prune-empty
+#echo "remove empty commit"
+#git filter-branch -f --prune-empty

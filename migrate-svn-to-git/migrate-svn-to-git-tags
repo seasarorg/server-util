@@ -4,18 +4,41 @@
 #
 # @author Jun Futagawa
 
-LIST=$(git show-ref | grep " refs/remotes/tags" | grep -v "@")
+function debug() {
+    if [[ ${DEBUG} ]]
+    then
+        echo ">>> $*"
+    fi
+}
+
+TAG_LIST=$(git show-ref | grep " refs/remotes/tags" | grep -v "@")
 
 IFS='
 '
-for i in ${LIST}
+for i in ${TAG_LIST}
 do
-    HASH=$(echo ${i} | cut -d ' ' -f 1)
+    TAG_HASH=$(echo ${i} | cut -d ' ' -f 1)
     REMOTES_TAG_PATH=$(echo ${i} | cut -d ' ' -f 2-)
     VERSION=$(echo ${i} | cut -d '/' -f 4)
-    # echo "${VERSION}"
-    MESSAGE=$(git show --pretty=oneline ${HASH} | head -1 | cut -d ' ' -f 2-)
-    GIT_COMMITTER_DATE=$(git show --date=default --format="%at" ${HASH} | head -1)
-    # echo "-> ${MESSAGE}"
-    echo "GIT_COMMITTER_DATE='${GIT_COMMITTER_DATE}' git tag -a ${VERSION} -m '${MESSAGE}' ${HASH}"
+    debug ""
+    debug "VERSION: ${VERSION}"
+    debug "TAG_HASH: ${TAG_HASH}"
+
+    PARENT_SVN_COMMIT_ID=$(git log -1 --format='%b' ${TAG_HASH}^ | grep 'git-svn-id' | grep -o -e '@[0-9]*')
+    debug "PARENT_SVN_COMMIT_ID: ${PARENT_SVN_COMMIT_ID}"
+
+    MESSAGE=$(git log -1 --format='%s' ${TAG_HASH} | grep -v git-svn-id)
+    debug "MESSAGE: ${MESSAGE}"
+
+    PARENT_COMMIT=$(git log -1 --format='%H %at %s' --grep "${PARENT_SVN_COMMIT_ID} " --branches)
+    if [[ ${PARENT_COMMIT} = "" ]]; then
+        echo "# parent commit not found in branches"
+        debug "  parent commit not found in branches"
+        PARENT_COMMIT=$(git log -1 --format='%H %at %s' --grep "${PARENT_SVN_COMMIT_ID} " --all)
+    fi
+    debug "PARENT_COMMIT: ${PARENT_COMMIT}"
+    PARENT_TAG_HASH=$(echo ${PARENT_COMMIT} | cut -d ' ' -f 1)
+    GIT_COMMITTER_DATE=$(echo ${PARENT_COMMIT} | cut -d ' ' -f 2)
+
+    echo "GIT_COMMITTER_DATE='${GIT_COMMITTER_DATE}' git tag -a ${VERSION} -m '${MESSAGE}' ${PARENT_TAG_HASH}"
 done
