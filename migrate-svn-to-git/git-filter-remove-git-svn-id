@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+# remove git-svn-id
+echo "remove git-svn-id"
+git filter-branch --tag-name-filter cat --msg-filter 'sed -e "/git-svn-id:/d"' -f -- --all

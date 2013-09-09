@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+GITHUB="git@github.com"
+
+USER_NAME="$1"
+REPOSITORY_NAME="$2"
+BRANCHES="$3"
+
+if [ -z ${BRANCHES} ]; then
+    echo "$0 USER_NAME REPOSITORY_NAME BRANCHES"
+    echo "ex) $0 seasarorg projectname project-1.x,project-2.x"
+    exit 1
+fi
+
+IS_ALREADY=$(grep '\[remote "origin"\]' .git/config | wc -l)
+if [[ ${IS_ALREADY} -eq 0 ]]; then
+    REMOTE_NAME="origin"
+else 
+    REMOTE_NAME="${USER_NAME}"
+fi
+
+echo "[push branches to ${REMOTE_NAME}]"
+git remote add "${REMOTE_NAME}" "${GITHUB}:${USER_NAME}/${REPOSITORY_NAME}.git"
+
+IFS=',
+'
+for i in ${BRANCHES}
+do
+    BRANCH="${i}"
+    git checkout -b ${BRANCH} remotes/${BRANCH}
+    git push ${REMOTE_NAME} ${BRANCH}
+done

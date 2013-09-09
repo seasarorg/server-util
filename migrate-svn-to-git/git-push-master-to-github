@@ -19,7 +19,6 @@ else
     REMOTE_NAME="${USER_NAME}"
 fi
 
-echo "[push to ${REMOTE_NAME}]"
+echo "[push master to ${REMOTE_NAME}]"
 git remote add "${REMOTE_NAME}" "${GITHUB}:${USER_NAME}/${REPOSITORY_NAME}.git"
 git push "${REMOTE_NAME}" master
-git push "${REMOTE_NAME}" refs/tags/*

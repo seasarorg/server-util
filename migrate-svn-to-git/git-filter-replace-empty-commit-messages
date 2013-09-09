@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+ARGS_MESSAGES="$1"
+
+MESSAGES=${ARGS_MESSAGES:-'<empty commit message>'}
+
+# replace empty commit messages
+echo "replace empty commit messages"
+git filter-branch --tag-name-filter cat --msg-filter '
+read msg
+if [ -n "${msg}" ] ; then
+    echo "${msg}"
+else
+    echo "${MESSAGES}"
+fi' -f -- --all

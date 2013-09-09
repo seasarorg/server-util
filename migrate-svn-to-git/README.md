@@ -15,8 +15,9 @@ $ cd s2directory.git
 
 ```
 $ git svn init \
---tags tags/s2directory/* \
---trunk trunk \
+--trunk=trunk \
+--tags=tags/s2directory \
+--branches=branches \
 --ignore-paths='^trunk/www/' \
 https://www.seasar.org/svn/sandbox/s2directory/
 ```
@@ -24,16 +25,18 @@ https://www.seasar.org/svn/sandbox/s2directory/
 Subversion からコミット情報を取得して Git へ変換します。
 
 ```
+$ git svn fetch --authors-file ~/git-svn-authors.txt
+or
 $ git svn fetch
 ```
 
-### migrate-svn-to-git-tags
+### svn-tags-to-git-tags
 
 タグの候補を表示します。GIT_COMMITTER_DATE は、タグを付けた日付を再現するためのものです。
-git-svn-id の情報を使用するため、migrate-svn-to-git-filter より先に実行する必要があります。
+git-svn-id の情報を使用するため、git-filter-remove-git-svn-id より先に実行する必要があります。
 
 ```
-$ migrate-svn-to-git-tags
+$ svn-tags-to-git-tags
 GIT_COMMITTER_DATE='1136764858' git tag -a 0.1 -m 'Tag S2Directory 0.1 release' d1d331720535dc4d936f8cbc704c1beb95c9150a
 GIT_COMMITTER_DATE='1146332040' git tag -a 0.2 -m 'Tag S2Directory 0.2 release' 2368b1168ae9bd7223dc568ed0b62b9c364bfc45
 GIT_COMMITTER_DATE='1146337792' git tag -a 0.2.1 -m 'Tag S2Directory 0.2.1 release' 157f71c6736d6e700da3938387373251a0ef3e2b
@@ -56,23 +59,27 @@ $ GIT_COMMITTER_DATE='1146332857' git tag -a 0.2 -m 'Tag S2Directory 0.2 release
 ...
 ```
 
-### migrate-svn-to-git-filter
+### [Option] git-filter-*
 
-不要な情報を削除します。
+必要に応じて不要な情報を削除します。
 
 * remove git-svn-id
 * replace empty commit messages
-* [branches only] remove empty commit
+* remove empty commit
 
 ```
-$ migrate-svn-to-git-filter
+$ git-filter-remove-git-svn-id
+$ git-filter-replace-empty-commit-messages
+$ git-filter-prune-empty
 ```
 
-### migrate-svn-to-git-push USER_NAME REPOSITORY_NAME
+### git-push-*-to-github USER_NAME REPOSITORY_NAME
 
 GitHub へ push します。下記は seasarorg ユーザの test-s2directory3 リポジトリへ push する例です。
 
 ```
-$ migrate-svn-to-git-push seasarorg test-s2directory3
+$ git-push-master-to-github seasarorg test-s2directory3
+$ git-push-branches-to-github seasarorg test-s2directory3
+$ git-push-tags-to-github seasarorg test-s2directory3
 ```
 
