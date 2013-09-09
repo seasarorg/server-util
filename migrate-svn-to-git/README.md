@@ -79,7 +79,7 @@ GitHub へ push します。下記は seasarorg ユーザの test-s2directory3 �
 
 ```
 $ git-push-master-to-github seasarorg test-s2directory3
-$ git-push-branches-to-github seasarorg test-s2directory3
+$ git-push-branches-to-github seasarorg test-s2directory3 project-1.x,project-2.x
 $ git-push-tags-to-github seasarorg test-s2directory3
 ```
 

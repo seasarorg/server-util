@@ -20,4 +20,5 @@ else
 fi
 
 echo "[push tags to ${REMOTE_NAME}]"
+git remote add "${REMOTE_NAME}" "${GITHUB}:${USER_NAME}/${REPOSITORY_NAME}.git"
 git push "${REMOTE_NAME}" refs/tags/*
