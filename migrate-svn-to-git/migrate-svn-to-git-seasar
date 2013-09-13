@@ -1,0 +1,265 @@
+#!/bin/sh
+#
+# Migration tool for Seasar Project
+#
+# @author Jun Futagawa
+
+# - Configuration format
+# committer-name: yourname
+# name: projectname
+# svnroot: https://www.seasar.org/svn/projectname/
+# trunk: trunk
+# tags: tags
+# branches: branches
+# ignore-paths: '^trunk/www/'
+# option.remove-git-svn-id: 0
+# option.replace-empty-commit-messages: 0
+# option.replace-empty-commit-messages.string: '<empty commit message>'
+# option.migrate-branches: name-1.x,name-2.x
+# option.no-convert-ignore-file: 0
+# option.no-convert-git-style-tag: 0
+# option.no-prune-empty: 0
+# option.no-migrate-branches: 0
+# option.no-migrate-tags: 0
+
+SCRIPT="$(basename "${0}")"
+SCRIPT_DIR="$(dirname ${0})"
+BASE_DIR="${HOME}/migrate-svn-to-git"
+CONF_DIR="${BASE_DIR}/conf"
+WORK_DIR="${BASE_DIR}/work"
+
+REPOSITORYS=$(ls "${CONF_DIR}")
+
+GITHUB="git@github.com"
+GITHUB_USER_NAME="seasarorg"
+
+GIT_SVN_AUTHORS_FILE="${CONF_DIR}/git-svn-authors.txt"
+GIT_COMMIT_GITIGNORE_FILES_MESSAGE="Added .gitignore files"
+
+debug() {
+    if [[ ${DEBUG} ]]
+    then
+        echo ">>> $*"
+    fi
+}
+
+# Usage
+usage() {
+    cat << _EOF_
+
+Usage:
+    ${SCRIPT} [-a|-p package...]]
+
+Options:
+    -a Migrate all repositories
+    -p Migrate the specified repository(s) only. Available packages are:
+        ${REPOSITORYS}
+
+_EOF_
+}
+
+# Get configuration value
+get_config() {
+    CONFIG_FILE="${1}"
+    PARAMETER_NAME="${2}"
+    IS_REQUIRED="${3:-0}"
+
+    get_config=$(cat ${CONFIG_FILE} | egrep "^${PARAMETER_NAME}" | awk '{ print $2 }')
+    debug "${PARAMETER_NAME}: ${get_config}"
+
+    if [[ ${IS_REQUIRED} -eq 1 ]] && [[ -z ${get_config} ]]; then
+        echo "${CONFIG_FILE}: ${PARAMETER_NAME} is required!"
+        exit 1;
+    fi
+}
+
+# Migrate repository
+migrate_repository() {
+    REPOSITORY="${1}"
+
+    echo "Migrating repostiory for ${REPOSITORY}..."
+    CONFIG_FILE="${CONF_DIR}/${REPOSITORY}"
+
+    # get configuration values (required)
+    get_config "${CONFIG_FILE}" "committer-name" 1; COMMITER_NAME=${get_config}
+    get_config "${CONFIG_FILE}" "name" 1          ; NAME=${get_config}
+    get_config "${CONFIG_FILE}" "svnroot" 1       ; SVNROOT=${get_config}
+
+    # get configuration values (optional)
+    get_config "${CONFIG_FILE}" "trunk"           ; TRUNK=${get_config:-"trunk"}
+    get_config "${CONFIG_FILE}" "tags"            ; TAGS=${get_config:-"tags"}
+    get_config "${CONFIG_FILE}" "branches"        ; BRANCHES=${get_config:-"branches"}
+    get_config "${CONFIG_FILE}" "ignore-paths"    ; IGNORE_PATHS=${get_config:-""}
+    get_config "${CONFIG_FILE}" "option.remove-git-svn-id"       ; IS_REMOVE_GIT_SVN_ID=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.replace-empty-commit-messages"; IS_REPLACE_EMPTY_COMMIT_MESSAGES=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.replace-empty-commit-messages.string"; REPLACE_EMPTY_COMMIT_MESSAGES_STRING=${get_config:-'<empty commit message>'}
+    get_config "${CONFIG_FILE}" "option.migrate-branches"        ; MIGRATE_BRANCHES=${get_config:-""}
+    get_config "${CONFIG_FILE}" "option.no-convert-ignore-file"  ; IS_NO_CONVERT_IGNORE_FILES=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.no-convert-git-style-tag"; IS_NO_CONVERT_GIT_STYLE_TAG=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.no-prune-empty"          ; IS_NO_PRUNE_EMTPY=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.no-migrate-branches"     ; IS_NO_MIGRATE_BRANCHES=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.no-migrate-tags"         ; IS_NO_MIGRATE_TAGS=${get_config:-0}
+
+    MIGRATE_SCRIPT="${WORK_DIR}/${REPOSITORY}"
+
+    # git svn init
+    cat << _EOF_ > "${MIGRATE_SCRIPT}"
+# git svn init
+git svn init \\
+--trunk=${TRUNK} \\
+--branches=${BRANCHES} \\
+--tags=${TAGS} \\
+--ignore-paths=${IGNORE_PATHS} \\
+${SVNROOT}
+
+_EOF_
+
+    # create author file: TODO
+    SVN_UUID=$(svn info ${SVNROOT} | grep UUID | awk '{ print $3 }')
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# SVN_UUID: ${SVN_UUID}
+
+_EOF_
+
+    # git svn fetch
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# git svn fetch
+git svn fetch --authors-file ${GIT_SVN_AUTHORS_FILE}
+
+_EOF_
+
+    # git config: TODO
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# git config
+# git config user.name "Project Leader Name"
+# git config user.email project leader mail address
+
+_EOF_
+
+    # git svn create-ignore and commit
+    if [[ ${IS_NO_CONVERT_IGNORE_FILES} -eq 0 ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# git svn create-ignore and commit
+git svn create-ignore
+git commit -a -m "Added .gitignore files"
+
+_EOF_
+    fi
+
+    # svn tags to git tags
+    if [[ ${IS_NO_CONVERT_GIT_STYLE_TAG} -eq 0 ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# svn tags to git tags
+${SCRIPT_DIR}/svn-tags-to-git-tags > tmp-run
+sh tmp-run
+rm -f tmp-run
+
+_EOF_
+    fi
+
+    # remove git-svn-id
+    if [[ ${IS_REMOVE_GIT_SVN_ID} -eq 1 ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# remove git-svn-id
+${SCRIPT_DIR}/git-filter-remove-git-svn-id
+
+_EOF_
+    fi
+
+    # replace empty commit messages
+    if [[ ${IS_REPLACE_EMPTY_COMMIT_MESSAGES} -eq 1 ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# replace empty commit messages
+${SCRIPT_DIR}/git-filter-replace-empty-commit-messages "${REPLACE_EMPTY_COMMIT_MESSAGES_STRING}"
+
+_EOF_
+    fi
+
+    # prune-empty
+    if [[ ${IS_NO_PRUNE_EMTPY} -eq 0 ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# prune empty
+${SCRIPT_DIR}/git-filter-prune-empty
+
+_EOF_
+    fi
+
+    # push master
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# push master
+${SCRIPT_DIR}/git-push-master-to-github ${GITHUB_USER_NAME} test-${REPOSITORY}
+
+_EOF_
+
+    # push branches
+    if [[ ${IS_NO_MIGRATE_BRANCHES} -eq 0 ]] && [[ -z "${MIGRATE_BRANCHES}" ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# push bracnhes
+${SCRIPT_DIR}/git-push-branches-to-github ${GITHUB_USER_NAME} test-${REPOSITORY} ${MIGRATE_BRANCHES}
+
+_EOF_
+    fi
+
+    # push tags
+    if [[ ${IS_NO_MIGRATE_TAGS} -eq 0 ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# push tags
+${SCRIPT_DIR}/git-push-tags-to-github ${GITHUB_USER_NAME} test-${REPOSITORY}
+
+_EOF_
+    fi
+
+    # echo ""
+    # cat "${MIGRATE_SCRIPT}"
+}
+
+# Migrate repositories
+migrate_repositories() {
+    for REPOSITORY in ${@}; do
+        CONFIG_FILE="${CONF_DIR}/${REPOSITORY}"
+        if [ -f "${CONFIG_FILE}" ]; then
+            migrate_repository ${REPOSITORY}
+        else
+            echo "Skip ${REPOSITORY}: ${CONFIG_FILE} not found."
+        fi
+    done
+
+    echo
+    echo "Check migration scripts: ${WORK_DIR}"
+}
+
+# Main
+main() {
+    [ $# -lt 1 ] && ( usage; exit 1 );
+
+    # See how we're called.
+    MIGRATE_ALL="no"
+    MIGRATE_REPOSITORIES="no"
+    while getopts ap OPT; do
+        case "${OPT}" in
+            "a" )
+                MIGRATE_ALL="yes" ;;
+            "p" )
+                MIGRATE_REPOSITORIES="yes" ;;
+            * )
+                usage
+                exit 1
+                ;;
+        esac
+    done
+    shift $((${OPTIND} - 1))
+
+    # Create work directory
+    if [ ! -d "${WORK_DIR}" ]; then
+        mkdir "${WORK_DIR}"
+    fi
+
+    # Migration task
+    if [ "${MIGRATE_ALL}" = "yes" ]; then
+        migrate_repositories ${REPOSITORYS}
+    elif [ "${MIGRATE_REPOSITORIES}" = "yes" ]; then
+        migrate_repositories ${@}
+    fi
+}
+
+[ ${#BASH_SOURCE[@]} = 1 ] && main "$@"
