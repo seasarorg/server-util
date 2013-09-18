@@ -1,0 +1,6 @@
+committer-name: suga
+name: mayaa-struts2
+svnroot: https://www.seasar.org/svn/mayaa
+trunk: trunk/struts2-mayaa-plugin
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1

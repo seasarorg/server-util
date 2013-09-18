@@ -1,0 +1,6 @@
+committer-name: suga
+name: mayaa-www
+svnroot: https://www.seasar.org/svn/mayaa
+trunk: trunk/www
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1

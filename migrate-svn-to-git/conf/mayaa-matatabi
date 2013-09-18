@@ -1,0 +1,7 @@
+committer-name: suga
+name: mayaa-matatabi
+svnroot: https://www.seasar.org/svn/mayaa
+trunk: trunk/matatabi
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1
+ignore-paths: '(\.war|\.zip)$'
