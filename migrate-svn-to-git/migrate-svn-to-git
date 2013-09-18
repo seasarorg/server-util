@@ -122,7 +122,7 @@ migrate_repository() {
     PROJECT_SVN_UUID=$(svn info ${SVNROOT} | grep UUID | awk '{ print $3 }')
 
     # Project Information
-    PROJECT_NAME=$(echo ${SVNROOT} |  egrep -o "svn/(sandbox/)?.*/" | sed "s/\/sandbox//g" | cut -d'/' -f 2)
+    PROJECT_NAME=$(echo ${SVNROOT} | egrep -o "svn/(sandbox/)?.*" | sed "s/\/sandbox//g" | cut -d'/' -f 2)
     PROJECT_JSON_URL="https://www.seasar.org/members/project/${PROJECT_NAME}/json"
     PROJECT_LEADER=$(curl -s ${PROJECT_JSON_URL} | jq -r ".projectDescription.leader")
     PROJECT_MEMBER_LIST=$(curl -s ${PROJECT_JSON_URL} | jq -r ".memberUid[]")
