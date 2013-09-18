@@ -11,10 +11,29 @@ Subversion から Git リポジトリへ移行するためのユーティリテ�
 
 ## フォーマットの処理
 
+フォーマットを処理します。
+
+### migrate-svn-to-git
+
+処理コマンドのオプションです。
+
+
+```
+Usage:
+    migrate-svn-to-git [-a|-r package] [-p prefix] [-s suffix]
+
+Options:
+    -a Migrate all repositories
+    -r Migrate the specified repository only. Available packages are:
+        doma doma-gen doma-samples doma-tools mayaa mayaa-matatabi mayaa-struts2 mayaa-webwork2 mayaa-www s2directory s2directory-www
+    -p prefix for new repository name
+    -s suffix for new repository name
+```
+
 conf ディレクトリにあるフォーマットを個別に処理します。
 
 ```
-./migrate-svn-to-git -r s2director -p test- -s 5
+$ ./migrate-svn-to-git -r s2director -p test- -s 5
 ```
 
 ## 個別スクリプト
