@@ -23,17 +23,21 @@
 # option.no-migrate-tags: 0
 
 SCRIPT="$(basename "${0}")"
-SCRIPT_DIR="$(dirname ${0})"
-BASE_DIR="${HOME}/migrate-svn-to-git"
-CONF_DIR="${BASE_DIR}/conf"
-WORK_DIR="${BASE_DIR}/work"
+SCRIPT_DIR="$(dirname ${0} | pwd)"
+CONF_DIR="${SCRIPT_DIR}/conf"
+WORK_DIR="${SCRIPT_DIR}/work"
 
-REPOSITORYS=$(ls "${CONF_DIR}")
+REPOSITORIES=$(ls "${CONF_DIR}")
 
 GITHUB="git@github.com"
 GITHUB_USER_NAME="seasarorg"
 
-GIT_SVN_AUTHORS_FILE="${CONF_DIR}/git-svn-authors.txt"
+REPOSITORY_PREFIX=""
+REPOSITORY_SUFFIX=""
+
+# - Author file
+# name1 = Full Name <user@example.org>
+ALL_AUTHORS_FILE="${WORK_DIR}/all-authors.txt"
 GIT_COMMIT_GITIGNORE_FILES_MESSAGE="Added .gitignore files"
 
 debug() {
@@ -48,12 +52,14 @@ usage() {
     cat << _EOF_
 
 Usage:
-    ${SCRIPT} [-a|-p package...]]
+    ${SCRIPT} [-a|-r package] [-p prefix] [-s suffix]
 
 Options:
     -a Migrate all repositories
-    -p Migrate the specified repository(s) only. Available packages are:
-        ${REPOSITORYS}
+    -r Migrate the specified repository only. Available packages are:
+        $(echo ${REPOSITORIES} | xargs)
+    -p prefix for new repository name
+    -s suffix for new repository name
 
 _EOF_
 }
@@ -73,11 +79,22 @@ get_config() {
     fi
 }
 
+get_author_info() {
+    MEMBER_UID="${1}"
+
+    GIT_USER=$(grep "${MEMBER_UID}" "${ALL_AUTHORS_FILE}")
+    if [ -z "${GIT_USER}" ]; then
+        get_author_info="${MEMBER_UID} = ${MEMBER_UID} <${MEMBER_UID}@${PROJECT_SVN_UUID}>"
+    else
+        get_author_info="${GIT_USER}"
+    fi
+}
+
 # Migrate repository
 migrate_repository() {
     REPOSITORY="${1}"
+    REPOSITORY_NAME="${REPOSITORY_PREFIX}${REPOSITORY}${REPOSITORY_SUFFIX}"
 
-    echo "Migrating repostiory for ${REPOSITORY}..."
     CONFIG_FILE="${CONF_DIR}/${REPOSITORY}"
 
     # get configuration values (required)
@@ -93,17 +110,66 @@ migrate_repository() {
     get_config "${CONFIG_FILE}" "option.remove-git-svn-id"       ; IS_REMOVE_GIT_SVN_ID=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.replace-empty-commit-messages"; IS_REPLACE_EMPTY_COMMIT_MESSAGES=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.replace-empty-commit-messages.string"; REPLACE_EMPTY_COMMIT_MESSAGES_STRING=${get_config:-'<empty commit message>'}
-    get_config "${CONFIG_FILE}" "option.migrate-branches"        ; MIGRATE_BRANCHES=${get_config:-""}
+    get_config "${CONFIG_FILE}" "option.migrate-branches"        ; MIGRATE_BRANCHES=${get_config-""}
     get_config "${CONFIG_FILE}" "option.no-convert-ignore-file"  ; IS_NO_CONVERT_IGNORE_FILES=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.no-convert-empty-directory"  ; IS_NO_CONVERT_EMPTY_DIRECTORY=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-convert-git-style-tag"; IS_NO_CONVERT_GIT_STYLE_TAG=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-prune-empty"          ; IS_NO_PRUNE_EMTPY=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-migrate-branches"     ; IS_NO_MIGRATE_BRANCHES=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-migrate-tags"         ; IS_NO_MIGRATE_TAGS=${get_config:-0}
 
-    MIGRATE_SCRIPT="${WORK_DIR}/${REPOSITORY}"
+    # SVN Information
+    PROJECT_SVN_UUID=$(svn info ${SVNROOT} | grep UUID | awk '{ print $3 }')
+
+    # Project Information
+    PROJECT_NAME=$(echo ${SVNROOT} |  egrep -o "svn/(sandbox/)?.*/" | sed "s/\/sandbox//g" | cut -d'/' -f 2)
+    PROJECT_JSON_URL="https://www.seasar.org/members/project/${PROJECT_NAME}/json"
+    PROJECT_LEADER=$(curl -s ${PROJECT_JSON_URL} | jq -r ".projectDescription.leader")
+    PROJECT_MEMBER_LIST=$(curl -s ${PROJECT_JSON_URL} | jq -r ".memberUid[]")
+
+    #
+    # output
+    #
+    PROJECT_WORK_DIR="${WORK_DIR}/${REPOSITORY_NAME}"
+    if [ ! -d "${PROJECT_WORK_DIR}" ]; then
+        mkdir -p "${PROJECT_WORK_DIR}"
+    fi
+    PROJECT_WORK_GIT_DIR="${PROJECT_WORK_DIR}/${NAME}.git"
+
+    # create author file for project
+    PROJECT_AUTHOR_FILE="${PROJECT_WORK_DIR}/authors.txt"
+    cat << '_EOF_' > ${PROJECT_AUTHOR_FILE}
+httpd = The Seasar Project Administrator <admin@seasar.org>
+apache = The Seasar Project Administrator <admin@seasar.org>
+_EOF_
+    for i in ${PROJECT_MEMBER_LIST}
+    do
+        MEMBER_UID="${i}"
+        get_author_info "${MEMBER_UID}"
+        echo "${get_author_info}" >> ${PROJECT_AUTHOR_FILE}
+    done
+
+    # migrate script
+    MIGRATE_SCRIPT="${PROJECT_WORK_DIR}/migrate-run"
+    cat << _EOF_ > "${MIGRATE_SCRIPT}"
+#!/bin/sh
+
+_EOF_
+
+    # create git repository directory
+    cat << _EOF_ > "${MIGRATE_SCRIPT}"
+if [ -d "${PROJECT_WORK_GIT_DIR}" ]; then
+    echo "git repository exists: ${PROJECT_WORK_GIT_DIR}"
+    exit 1
+fi
+
+mkdir -p "${PROJECT_WORK_GIT_DIR}"
+pushd "${PROJECT_WORK_GIT_DIR}"
+
+_EOF_
 
     # git svn init
-    cat << _EOF_ > "${MIGRATE_SCRIPT}"
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # git svn init
 git svn init \\
 --trunk=${TRUNK} \\
@@ -114,34 +180,38 @@ ${SVNROOT}
 
 _EOF_
 
-    # create author file: TODO
-    SVN_UUID=$(svn info ${SVNROOT} | grep UUID | awk '{ print $3 }')
-    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
-# SVN_UUID: ${SVN_UUID}
-
-_EOF_
-
     # git svn fetch
     cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # git svn fetch
-git svn fetch --authors-file ${GIT_SVN_AUTHORS_FILE}
+git svn fetch --authors-file ${PROJECT_AUTHOR_FILE}
 
 _EOF_
 
-    # git config: TODO
+    # git config
+    get_author_info "${PROJECT_LEADER}"
+    PROJECT_LEADER_NAME=$(echo ${get_author_info} | cut -d'=' -f 2 | egrep -o ".*<" | tr -d "<" | sed "s/^ //" | sed "s/ $//")
+    PROJECT_LEADER_MAIL=$(echo ${get_author_info} | cut -d'=' -f 2 | egrep -o "<.*>" | tr -d "<>")
     cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # git config
-# git config user.name "Project Leader Name"
-# git config user.email project leader mail address
+git config user.name "${PROJECT_LEADER_NAME}"
+git config user.email ${PROJECT_LEADER_MAIL}
 
 _EOF_
 
-    # git svn create-ignore and commit
+    # convert ignore files
     if [[ ${IS_NO_CONVERT_IGNORE_FILES} -eq 0 ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
-# git svn create-ignore and commit
-git svn create-ignore
-git commit -a -m "Added .gitignore files"
+# convert ignore files
+${SCRIPT_DIR}/git-convert-ignore
+
+_EOF_
+    fi
+
+    # convert empty directry
+    if [[ ${IS_NO_CONVERT_EMPTY_DIRECTORY} -eq 0 ]]; then
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# convert empty directry
+${SCRIPT_DIR}/git-convert-empty-directory
 
 _EOF_
     fi
@@ -187,15 +257,15 @@ _EOF_
     # push master
     cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push master
-${SCRIPT_DIR}/git-push-master-to-github ${GITHUB_USER_NAME} test-${REPOSITORY}
+${SCRIPT_DIR}/git-push-master-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME}
 
 _EOF_
 
     # push branches
-    if [[ ${IS_NO_MIGRATE_BRANCHES} -eq 0 ]] && [[ -z "${MIGRATE_BRANCHES}" ]]; then
+    if [[ ${IS_NO_MIGRATE_BRANCHES} -eq 0 ]] && [[ ! -z "${MIGRATE_BRANCHES}" ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push bracnhes
-${SCRIPT_DIR}/git-push-branches-to-github ${GITHUB_USER_NAME} test-${REPOSITORY} ${MIGRATE_BRANCHES}
+${SCRIPT_DIR}/git-push-branches-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME} ${MIGRATE_BRANCHES}
 
 _EOF_
     fi
@@ -204,13 +274,20 @@ _EOF_
     if [[ ${IS_NO_MIGRATE_TAGS} -eq 0 ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push tags
-${SCRIPT_DIR}/git-push-tags-to-github ${GITHUB_USER_NAME} test-${REPOSITORY}
+${SCRIPT_DIR}/git-push-tags-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME}
 
 _EOF_
     fi
 
-    # echo ""
-    # cat "${MIGRATE_SCRIPT}"
+    # end script
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+popd
+_EOF_
+    chmod 700 "${MIGRATE_SCRIPT}"
+
+    echo "# ${REPOSITORY_NAME} migration script:"
+    echo "${MIGRATE_SCRIPT}"
+#    cat "${MIGRATE_SCRIPT}"
 }
 
 # Migrate repositories
@@ -223,9 +300,6 @@ migrate_repositories() {
             echo "Skip ${REPOSITORY}: ${CONFIG_FILE} not found."
         fi
     done
-
-    echo
-    echo "Check migration scripts: ${WORK_DIR}"
 }
 
 # Main
@@ -234,13 +308,16 @@ main() {
 
     # See how we're called.
     MIGRATE_ALL="no"
-    MIGRATE_REPOSITORIES="no"
-    while getopts ap OPT; do
+    while getopts ar:p:s: OPT; do
         case "${OPT}" in
             "a" )
                 MIGRATE_ALL="yes" ;;
+            "r" )
+                MIGRATE_REPOSITORY="${OPTARG}";;
             "p" )
-                MIGRATE_REPOSITORIES="yes" ;;
+                REPOSITORY_PREFIX="${OPTARG}" ;;
+            "s" )
+                REPOSITORY_SUFFIX="${OPTARG}" ;;
             * )
                 usage
                 exit 1
@@ -256,9 +333,9 @@ main() {
 
     # Migration task
     if [ "${MIGRATE_ALL}" = "yes" ]; then
-        migrate_repositories ${REPOSITORYS}
-    elif [ "${MIGRATE_REPOSITORIES}" = "yes" ]; then
-        migrate_repositories ${@}
+        migrate_repositories ${REPOSITORIES}
+    else
+        migrate_repositories ${MIGRATE_REPOSITORY}
     fi
 }
 

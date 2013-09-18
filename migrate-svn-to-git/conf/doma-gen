@@ -1,0 +1,4 @@
+committer-name: taedium
+name: doma-gen
+svnroot: https://www.seasar.org/svn/doma/
+ignore-paths: '(^(?!branches/.*|trunk/doma-gen/.*|trunk/doma-gen-it/.*)|(\.jar|\.war|\.zip)$)'

@@ -1,0 +1,4 @@
+committer-name: taedium
+name: doma-samples
+svnroot: https://www.seasar.org/svn/doma/
+ignore-paths: '(^(?!branches/.*|trunk/doma-tutorial/.*|trunk/doma-jpetstore/.*)|(\.jar|\.war|\.zip)$)'

@@ -1,0 +1,7 @@
+committer-name: jfut
+name: s2directory
+svnroot: https://www.seasar.org/svn/sandbox/s2directory/
+trunk: trunk
+tags: tags/s2directory \
+branches: branches
+ignore-paths: '^trunk/www'

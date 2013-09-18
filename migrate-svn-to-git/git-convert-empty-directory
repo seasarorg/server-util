@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+echo "convert empty directory"
+
+find . -type d -empty -not -path './.git*' -exec touch {}\/.gitkeep \;
+
+git add .
+git commit -a -m "Added .gitkeep files"

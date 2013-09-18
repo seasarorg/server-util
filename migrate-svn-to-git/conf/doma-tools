@@ -1,0 +1,4 @@
+committer-name: taedium
+name: doma-tools
+svnroot: https://www.seasar.org/svn/doma/
+ignore-paths: '(^(?!branches/.*|trunk/org.seasar.doma.extension.domax/.*|trunk/org.seasar.doma.extension.feature/.*|trunk/org.seasar.doma.extension.updatesite/.*)|(\.jar|\.war|\.zip)$)'

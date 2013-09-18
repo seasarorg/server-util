@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+TEMP_DIR="$(mktemp -d)"
+
+PRE_FILE="${TEMP_DIR}/pre.txt"
+POST_FILE="${TEMP_DIR}/post.txt"
+
+CURRENT_DIR=$(pwd)
+
+ls . > ${PRE_FILE}
+
+echo "convert ignore files"
+git svn create-ignore
+
+ls . > ${POST_FILE}
+
+DIFF_LIST=$(diff ${PRE_FILE} ${POST_FILE} | grep ">" | awk '{ print $2 }')
+if [[ ! -z ${DIFF_LIST} ]]; then
+    for i in ${DIFF_FILE}
+    do
+        rm -rf "${CURRENT_DIR}/${i}"
+    done
+fi
+
+git commit -a -m "Added .gitignore files"
+rm -rf "${TEMP_DIR}"

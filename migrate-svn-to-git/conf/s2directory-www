@@ -1,0 +1,4 @@
+committer-name: jfut
+name: s2directory-www
+svnroot: https://www.seasar.org/svn/sandbox/s2directory/
+trunk: trunk/www
