@@ -17,6 +17,7 @@
 # option.replace-empty-commit-messages.string: '<empty commit message>'
 # option.migrate-branches: name-1.x,name-2.x
 # option.no-convert-ignore-file: 0
+# option.no-convert-empty-directory: 0
 # option.no-convert-git-style-tag: 0
 # option.no-prune-empty: 0
 # option.no-migrate-branches: 0
