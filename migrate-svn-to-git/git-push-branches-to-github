@@ -8,7 +8,7 @@ USER_NAME="$1"
 REPOSITORY_NAME="$2"
 BRANCHES="$3"
 
-if [ -z ${BRANCHES} ]; then
+if [[ -z ${BRANCHES} ]]; then
     echo "$0 USER_NAME REPOSITORY_NAME BRANCHES"
     echo "ex) $0 seasarorg projectname project-1.x,project-2.x"
     exit 1

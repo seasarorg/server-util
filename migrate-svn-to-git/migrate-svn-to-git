@@ -84,7 +84,7 @@ get_author_info() {
     MEMBER_UID="${1}"
 
     GIT_USER=$(grep "${MEMBER_UID}" "${ALL_AUTHORS_FILE}")
-    if [ -z "${GIT_USER}" ]; then
+    if [[ -z "${GIT_USER}" ]]; then
         get_author_info="${MEMBER_UID} = ${MEMBER_UID} <${MEMBER_UID}@${PROJECT_SVN_UUID}>"
     else
         get_author_info="${GIT_USER}"
@@ -132,7 +132,7 @@ migrate_repository() {
     # output
     #
     PROJECT_WORK_DIR="${WORK_DIR}/${REPOSITORY_NAME}"
-    if [ ! -d "${PROJECT_WORK_DIR}" ]; then
+    if [[ ! -d "${PROJECT_WORK_DIR}" ]]; then
         mkdir -p "${PROJECT_WORK_DIR}"
     fi
     PROJECT_WORK_GIT_DIR="${PROJECT_WORK_DIR}/${NAME}.git"
@@ -159,7 +159,7 @@ _EOF_
 
     # create git repository directory
     cat << _EOF_ > "${MIGRATE_SCRIPT}"
-if [ -d "${PROJECT_WORK_GIT_DIR}" ]; then
+if [[ -d "${PROJECT_WORK_GIT_DIR}" ]]; then
     echo "git repository exists: ${PROJECT_WORK_GIT_DIR}"
     exit 1
 fi
@@ -295,7 +295,7 @@ _EOF_
 migrate_repositories() {
     for REPOSITORY in ${@}; do
         CONFIG_FILE="${CONF_DIR}/${REPOSITORY}"
-        if [ -f "${CONFIG_FILE}" ]; then
+        if [[ -f "${CONFIG_FILE}" ]]; then
             migrate_repository ${REPOSITORY}
         else
             echo "Skip ${REPOSITORY}: ${CONFIG_FILE} not found."
@@ -328,12 +328,12 @@ main() {
     shift $((${OPTIND} - 1))
 
     # Create work directory
-    if [ ! -d "${WORK_DIR}" ]; then
+    if [[ ! -d "${WORK_DIR}" ]]; then
         mkdir "${WORK_DIR}"
     fi
 
     # Migration task
-    if [ "${MIGRATE_ALL}" = "yes" ]; then
+    if [[ "${MIGRATE_ALL}" = "yes" ]]; then
         migrate_repositories ${REPOSITORIES}
     else
         migrate_repositories ${MIGRATE_REPOSITORY}

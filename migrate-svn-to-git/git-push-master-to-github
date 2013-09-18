@@ -7,7 +7,7 @@ GITHUB="git@github.com"
 USER_NAME="$1"
 REPOSITORY_NAME="$2"
 
-if [ -z ${REPOSITORY_NAME} ]; then
+if [[ -z ${REPOSITORY_NAME} ]]; then
     echo $0 USER_NAME REPOSITORY_NAME
     exit 1
 fi
