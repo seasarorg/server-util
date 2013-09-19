@@ -1,0 +1,4 @@
+committer-name: jfut
+name: server-www
+svnroot: https://www.seasar.org/svn/server/
+trunk: trunk/www
