@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+REPOSITORY_NAME="$1"
+DESCRIPTION="$2"
+if [[ -z "${DESCRIPTION}" ]]; then
+    DESCRIPTION=${REPOSITORY_NAME}
+fi
+
+if [[ -z "${GITHUB_USER}" ]]; then
+    echo "GITHUB_USER need to be set."
+    echo "ex) export GITHUB_USER=username"
+    exit 1
+fi
+
+if [[ -z "${GITHUB_PASS}" ]]; then
+    echo "GITHUB_PASS need to be set."
+    echo "ex) export GITHUB_PASS=pasword"
+    exit 1
+fi
+
+if [[ -z "${REPOSITORY_NAME}" ]]; then
+    echo $0 REPOSITORY_NAME
+    exit 1
+fi
+
+GITHUB_ROOT=""
+if [[ -z "${GITHUB_ORGS}" ]]; then
+    GITHUB_ROOT="users/${GITHUB_USER}/repos"
+else
+    GITHUB_ROOT="orgs/${GITHUB_ORGS}/repos"
+fi
+
+echo "[create repository to ${GITHUB_ROOT}]"
+CREATE_JSON="{\"name\":\"${REPOSITORY_NAME}\", \"description\":\"${DESCRIPTION}\"}"
+curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}" -d "${CREATE_JSON}"
