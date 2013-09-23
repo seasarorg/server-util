@@ -2,6 +2,6 @@ committer-name: makotan
 name: s2buri
 svnroot: https://www.seasar.org/svn/sandbox/s2buri/
 trunk: trunk
-tags: tags/s2directory \
+tags: tags
 branches: branches
 ignore-paths: '^trunk/www'

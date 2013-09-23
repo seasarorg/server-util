@@ -2,3 +2,4 @@ committer-name: shinsuke
 name: s2portlet-www
 svnroot: https://www.seasar.org/svn/s2portlet/
 trunk: trunk/www
+option.no-migrate-branches: 1
