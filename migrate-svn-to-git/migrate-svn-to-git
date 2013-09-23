@@ -255,6 +255,13 @@ ${SCRIPT_DIR}/git-filter-prune-empty
 _EOF_
     fi
 
+    # create repository
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# create repository
+${SCRIPT_DIR}/git-create-repo-github ${REPOSITORY_NAME}
+
+_EOF_
+
     # push master
     cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push master
