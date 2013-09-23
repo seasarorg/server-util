@@ -1,0 +1,7 @@
+committer-name: takezoe
+name: s2jsfplugin
+svnroot: https://www.seasar.org/svn/s2jsfplugin/
+trunk: trunk
+tags: tags
+branches: branches
+ignore-paths: '^trunk/www'
