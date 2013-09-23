@@ -107,14 +107,15 @@ $ git-filter-replace-empty-commit-messages
 $ git-filter-prune-empty
 ```
 
-### git-push-*-to-github USER_NAME REPOSITORY_NAME
+### git-push-*-to-github REPOSITORY_NAME
 
 GitHub へ push します。下記は seasarorg ユーザの test-s2directory3 リポジトリへ push する例です。
 
 ```
-$ git-push-master-to-github seasarorg test-s2directory3
-$ git-push-branches-to-github seasarorg test-s2directory3 project-1.x,project-2.x
-$ git-push-tags-to-github seasarorg test-s2directory3
+$ export GITHUB_ORGS=seasarorg
+$ git-push-master-to-github test-s2directory3
+$ git-push-branches-to-github test-s2directory3 project-1.x,project-2.x
+$ git-push-tags-to-github test-s2directory3
 ```
 
 ## License

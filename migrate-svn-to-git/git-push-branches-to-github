@@ -2,16 +2,26 @@
 #
 # @author Jun Futagawa
 
-GITHUB="git@github.com"
+GITHUB_SSH="git@github.com"
 
-USER_NAME="$1"
-REPOSITORY_NAME="$2"
-BRANCHES="$3"
+REPOSITORY_NAME="$1"
+BRANCHES="$2"
+
+if [[ ! -z "${GITHUB_ORGS}" ]]; then
+    GITHUB_USER="${GITHUB_ORGS}"
+fi
+
+if [[ -z "${GITHUB_USER}" ]]; then
+    echo "GITHUB_USER or GITHUB_ORGS need to be set."
+    echo "ex) export GITHUB_USER=username"
+    echo "ex) export GITHUB_ORGS=orgname"
+    exit 1
+fi
 
 if [[ -z ${REPOSITORY_NAME} ]]; then
-    echo "$0 USER_NAME REPOSITORY_NAME [BRANCHES]"
-    echo "ex) $0 seasarorg projectname"
-    echo "ex) $0 seasarorg projectname project-1.x,project-2.x"
+    echo "$0 REPOSITORY_NAME [BRANCHES]"
+    echo "ex) $0 projectname"
+    echo "ex) $0 projectname project-1.x,project-2.x"
     exit 1
 fi
 
@@ -23,12 +33,16 @@ IS_ALREADY=$(grep '\[remote "origin"\]' .git/config | wc -l)
 if [[ ${IS_ALREADY} -eq 0 ]]; then
     REMOTE_NAME="origin"
 else 
-    REMOTE_NAME="${USER_NAME}"
+    REMOTE_NAME="${GITHUB_USER}"
+fi
+
+IS_ALREADY=$(grep "\[remote \"${REMOTE_NAME}\"\]" .git/config | wc -l)
+if [[ ${IS_ALREADY} -eq 0 ]]; then
+    echo "[push remote add ${REMOTE_NAME}]"
+    git remote add "${REMOTE_NAME}" "${GITHUB_SSH}:${GITHUB_USER}/${REPOSITORY_NAME}.git"
 fi
 
 echo "[push branches to ${REMOTE_NAME}]"
-git remote add "${REMOTE_NAME}" "${GITHUB}:${USER_NAME}/${REPOSITORY_NAME}.git"
-
 IFS=',
 '
 for i in ${BRANCHES}

@@ -30,9 +30,6 @@ WORK_DIR="${SCRIPT_DIR}/work"
 
 REPOSITORIES=$(ls "${CONF_DIR}")
 
-GITHUB="git@github.com"
-GITHUB_USER_NAME="seasarorg"
-
 REPOSITORY_PREFIX=""
 REPOSITORY_SUFFIX=""
 
@@ -265,7 +262,7 @@ _EOF_
     # push master
     cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push master
-${SCRIPT_DIR}/git-push-master-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME}
+${SCRIPT_DIR}/git-push-master-to-github ${REPOSITORY_NAME}
 
 _EOF_
 
@@ -273,7 +270,7 @@ _EOF_
     if [[ ${IS_NO_MIGRATE_BRANCHES} -eq 0 ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push bracnhes
-${SCRIPT_DIR}/git-push-branches-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME} ${MIGRATE_BRANCHES}
+${SCRIPT_DIR}/git-push-branches-to-github ${REPOSITORY_NAME} ${MIGRATE_BRANCHES}
 
 _EOF_
     fi
@@ -282,7 +279,7 @@ _EOF_
     if [[ ${IS_NO_MIGRATE_TAGS} -eq 0 ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push tags
-${SCRIPT_DIR}/git-push-tags-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME}
+${SCRIPT_DIR}/git-push-tags-to-github ${REPOSITORY_NAME}
 
 _EOF_
     fi
