@@ -8,10 +8,15 @@ USER_NAME="$1"
 REPOSITORY_NAME="$2"
 BRANCHES="$3"
 
-if [[ -z ${BRANCHES} ]]; then
-    echo "$0 USER_NAME REPOSITORY_NAME BRANCHES"
+if [[ -z ${REPOSITORY_NAME} ]]; then
+    echo "$0 USER_NAME REPOSITORY_NAME [BRANCHES]"
+    echo "ex) $0 seasarorg projectname"
     echo "ex) $0 seasarorg projectname project-1.x,project-2.x"
     exit 1
+fi
+
+if [[ -z ${BRANCHES} ]]; then
+    BRANCHES=$(git branch -a | egrep -v "/tags/|@|master$|remotes/trunk" | sed 's/.*remotes\///g')
 fi
 
 IS_ALREADY=$(grep '\[remote "origin"\]' .git/config | wc -l)
