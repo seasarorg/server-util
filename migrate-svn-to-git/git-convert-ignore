@@ -18,7 +18,7 @@ ls . > ${POST_FILE}
 
 DIFF_LIST=$(diff ${PRE_FILE} ${POST_FILE} | grep ">" | awk '{ print $2 }')
 if [[ ! -z ${DIFF_LIST} ]]; then
-    for i in ${DIFF_FILE}
+    for i in ${DIFF_LIST}
     do
         rm -rf "${CURRENT_DIR}/${i}"
     done
