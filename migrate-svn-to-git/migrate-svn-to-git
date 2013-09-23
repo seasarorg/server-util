@@ -270,7 +270,7 @@ ${SCRIPT_DIR}/git-push-master-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME}
 _EOF_
 
     # push branches
-    if [[ ${IS_NO_MIGRATE_BRANCHES} -eq 0 ]] && [[ ! -z "${MIGRATE_BRANCHES}" ]]; then
+    if [[ ${IS_NO_MIGRATE_BRANCHES} -eq 0 ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push bracnhes
 ${SCRIPT_DIR}/git-push-branches-to-github ${GITHUB_USER_NAME} ${REPOSITORY_NAME} ${MIGRATE_BRANCHES}
