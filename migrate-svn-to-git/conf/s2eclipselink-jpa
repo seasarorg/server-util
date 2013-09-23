@@ -1,0 +1,5 @@
+committer-name: koichik
+name: s2eclipselink-jpa
+svnroot: https://www.seasar.org/svn/sandbox/s2eclipselink/
+trunk: trunk
+option.no-migrate-tags: 1

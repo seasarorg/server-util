@@ -1,0 +1,5 @@
+committer-name: koichik
+name: s2jca
+svnroot: https://www.seasar.org/svn/s2jca/
+trunk: trunk
+option.no-migrate-tags: 1

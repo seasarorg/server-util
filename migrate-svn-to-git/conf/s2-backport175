@@ -1,0 +1,7 @@
+committer-name: koichik
+name: s2-backport175
+svnroot: https://www.seasar.org/svn/s2container/
+trunk: trunk
+ignore-paths: '^trunk/(!?s2-backport175)'
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1

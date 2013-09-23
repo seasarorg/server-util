@@ -1,0 +1,5 @@
+committer-name: koichik
+name: dolteng
+svnroot: https://www.seasar.org/svn/sandbox/dolteng/
+trunk: trunk
+option.no-migrate-tags: 1

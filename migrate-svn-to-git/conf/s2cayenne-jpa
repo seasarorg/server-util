@@ -1,0 +1,6 @@
+committer-name: koichik
+name: s2cayenne-jpa
+svnroot: https://www.seasar.org/svn/sandbox/s2cayenne/
+trunk: trunk
+ignore-paths: '^trunk/www'
+option.no-migrate-tags: 1

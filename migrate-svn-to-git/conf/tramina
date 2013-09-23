@@ -1,0 +1,5 @@
+committer-name: koichik
+name: tramina
+svnroot: https://www.seasar.org/svn/sandbox/tramina/
+trunk: trunk
+ignore-paths: '^trunk/www'

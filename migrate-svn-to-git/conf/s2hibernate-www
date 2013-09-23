@@ -1,0 +1,6 @@
+committer-name: koichik
+name: s2hibernate-www
+svnroot: https://www.seasar.org/svn/s2hibernate/
+trunk: trunk
+ignore-paths: '^trunk/s2hibernate'
+option.no-migrate-tags: 1

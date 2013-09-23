@@ -1,0 +1,6 @@
+committer-name: koichik
+name: s2toplink-jpa
+svnroot: https://www.seasar.org/svn/s2toplink/
+trunk: trunk
+ignore-paths: '^trunk/www'
+option.no-migrate-tags: 1

@@ -1,0 +1,6 @@
+committer-name: koichik
+name: s2axis
+svnroot: https://www.seasar.org/svn/s2axis/
+trunk: trunk
+ignore-paths: '^trunk/(s2axis2|www)'
+option.no-migrate-tags: 1

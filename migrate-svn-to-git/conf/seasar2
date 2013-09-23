@@ -1,0 +1,7 @@
+committer-name: koichik
+name: seasar2
+svnroot: https://www.seasar.org/svn/s2container/
+trunk: trunk
+ignore-paths: '^trunk/(!?s2-tiger|s2jdbc-gen|s2jdbc-it|s2jdbc-tutorial|seasar2)'
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1

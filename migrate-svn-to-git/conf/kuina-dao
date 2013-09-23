@@ -1,0 +1,6 @@
+committer-name: koichik
+name: kuina-dao
+svnroot: https://www.seasar.org/svn/kuina/
+trunk: trunk
+ignore-paths: '^trunk/(kuina(?!-)|www)'
+option.no-migrate-tags: 1

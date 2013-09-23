@@ -1,0 +1,6 @@
+committer-name: koichik
+name: s2util
+svnroot: https://www.seasar.org/svn/sandbox/s2util/
+trunk: trunk
+ignore-paths: '^trunk/www'
+option.no-migrate-tags: 1

@@ -1,0 +1,5 @@
+committer-name: koichik
+name: s2rmi
+svnroot: https://www.seasar.org/svn/s2rmi/
+trunk: trunk
+option.no-migrate-tags: 1

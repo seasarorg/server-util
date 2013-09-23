@@ -1,0 +1,6 @@
+committer-name: koichik
+name: junitcdi
+svnroot: https://www.seasar.org/svn/sandbox/junitcdi/
+trunk: trunk
+tags: tags
+ignore-paths: '^trunk/www'
