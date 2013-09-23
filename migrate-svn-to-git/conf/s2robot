@@ -1,0 +1,7 @@
+committer-name: shinsuke
+name: s2robot
+svnroot: https://www.seasar.org/svn/sandbox/s2robot/
+trunk: trunk
+tags: tags
+branches: branches
+ignore-paths: '^trunk/www|^trunk/s2robot-example|^trunk/s2robot-seo'

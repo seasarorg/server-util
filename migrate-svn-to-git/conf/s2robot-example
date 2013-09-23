@@ -1,0 +1,7 @@
+committer-name: shinsuke
+name: s2robot-example
+svnroot: https://www.seasar.org/svn/sandbox/s2robot/
+trunk: trunk
+tags: tags
+branches: branches
+ignore-paths: '^trunk/www|^trunk/s2robot|^trunk/s2robot-db|^trunk/s2robot-db-h2|^trunk/s2robot-db-mysql|^trunk/s2robot-db-oracle|^trunk/s2robot-dbflute-runtime'

@@ -1,0 +1,7 @@
+committer-name: shinsuke
+name: s2jcr
+svnroot: https://www.seasar.org/svn/sandbox/s2jcr/
+trunk: trunk
+tags: tags
+branches: branches
+ignore-paths: '^trunk/www'
