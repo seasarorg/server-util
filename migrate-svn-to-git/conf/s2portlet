@@ -1,7 +1,7 @@
 committer-name: shinsuke
 name: s2portlet
 svnroot: https://www.seasar.org/svn/s2portlet/
-trunk: trunk
+trunk: trunk/s2portlet
 tags: tags
 branches: branches
 ignore-paths: '^trunk/www'
