@@ -3,5 +3,5 @@ name: s2jsfplugin
 svnroot: https://www.seasar.org/svn/s2jsfplugin/
 trunk: trunk
 tags: tags
-branches: branches
+option.no-migrate-branches: 1
 ignore-paths: '^trunk/www'

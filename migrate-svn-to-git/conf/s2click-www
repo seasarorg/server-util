@@ -2,4 +2,6 @@ committer-name: takezoe
 name: s2click-www
 svnroot: https://www.seasar.org/svn/sandbox/s2click/
 trunk: trunk/www
-ignore-paths: '^trunk/eclipse|^trunk/s2click|^trunk/s2click-old|^branches|^tags'
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1
+ignore-paths: '^trunk/eclipse|^trunk/s2click|^trunk/s2click-old'
