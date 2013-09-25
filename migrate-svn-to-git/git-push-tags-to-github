@@ -5,6 +5,7 @@
 GITHUB_SSH="git@github.com"
 
 REPOSITORY_NAME="$1"
+TAGS="$2"
 
 if [[ ! -z "${GITHUB_ORGS}" ]]; then
     GITHUB_USER="${GITHUB_ORGS}"
@@ -18,7 +19,7 @@ if [[ -z "${GITHUB_USER}" ]]; then
 fi
 
 if [[ -z ${REPOSITORY_NAME} ]]; then
-    echo $0 REPOSITORY_NAME
+    echo $0 REPOSITORY_NAME [1.0,1.1,2.0]
     exit 1
 fi
 
@@ -36,4 +37,14 @@ if [[ ${IS_ALREADY} -eq 0 ]]; then
 fi
 
 echo "[push tags to ${REMOTE_NAME}]"
-git push "${REMOTE_NAME}" refs/tags/*
+if [[ -z ${TAGS} ]]; then
+    git push "${REMOTE_NAME}" refs/tags/*
+else
+    IFS=',
+    '
+    for i in ${TAGS}
+    do
+        TAG="${i}"
+        git push "${REMOTE_NAME}" refs/tags/${TAG}
+    done
+fi

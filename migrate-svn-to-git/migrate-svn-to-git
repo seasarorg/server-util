@@ -16,6 +16,7 @@
 # option.replace-empty-commit-messages: 0
 # option.replace-empty-commit-messages.string: '<empty commit message>'
 # option.migrate-branches: name-1.x,name-2.x
+# option.migrate-tags: 1.0,1.1,2.0
 # option.no-convert-ignore-file: 0
 # option.no-convert-empty-directory: 0
 # option.no-convert-git-style-tag: 0
@@ -109,6 +110,7 @@ migrate_repository() {
     get_config "${CONFIG_FILE}" "option.replace-empty-commit-messages"; IS_REPLACE_EMPTY_COMMIT_MESSAGES=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.replace-empty-commit-messages.string"; REPLACE_EMPTY_COMMIT_MESSAGES_STRING=${get_config:-'<empty commit message>'}
     get_config "${CONFIG_FILE}" "option.migrate-branches"        ; MIGRATE_BRANCHES=${get_config-""}
+    get_config "${CONFIG_FILE}" "option.migrate-tags"            ; MIGRATE_TAGS=${get_config-""}
     get_config "${CONFIG_FILE}" "option.no-convert-ignore-file"  ; IS_NO_CONVERT_IGNORE_FILES=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-convert-empty-directory"  ; IS_NO_CONVERT_EMPTY_DIRECTORY=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-convert-git-style-tag"; IS_NO_CONVERT_GIT_STYLE_TAG=${get_config:-0}
@@ -279,7 +281,7 @@ _EOF_
     if [[ ${IS_NO_MIGRATE_TAGS} -eq 0 ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # push tags
-${SCRIPT_DIR}/git-push-tags-to-github ${REPOSITORY_NAME}
+${SCRIPT_DIR}/git-push-tags-to-github ${REPOSITORY_NAME} ${MIGRATE_TAGS}
 
 _EOF_
     fi
