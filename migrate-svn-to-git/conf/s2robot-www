@@ -1,4 +1,6 @@
 committer-name: shinsuke
 name: s2robot-www
 svnroot: https://www.seasar.org/svn/sandbox/s2robot/
-ignore-paths: '^trunk/s2robot-example|^trunk/s2robot-seo|^trunk/s2robot|^trunk/s2robot-db|^trunk/s2robot-db-h2|^trunk/s2robot-db-mysql|^trunk/s2robot-db-oracle|^trunk/s2robot-dbflute-runtime'
+trunk: trunk/www
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1

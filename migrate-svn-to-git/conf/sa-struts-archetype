@@ -4,4 +4,6 @@ svnroot: https://www.seasar.org/svn/sastruts/
 trunk: trunk
 tags: tags
 branches: branches
-ignore-paths: '^trunk/www|^trunk/sa-struts|^trunk/sa-struts-blank|^trunk/sa-struts-plugin|^trunk/sa-struts-portlet|^trunk/sa-struts-tutorial'
+ignore-paths: '^trunk/(?!sa-struts-archetype)'
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1
