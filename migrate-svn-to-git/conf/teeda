@@ -3,6 +3,6 @@ name: teeda
 svnroot: https://www.seasar.org/svn/teeda/
 trunk: branches/teeda-1.0.13
 branches: branches
-ignore-paths: '^branches/(jsf-1.2|teeda-1.0.2|teeda-.*?1.0.12-branch)|^branches/[^/]+/(issues|spike|teeda-dev-doc|todo-manage|www)'
+ignore-paths: '^branches/teeda-1.0.1[123]/(issues|spike|teeda-dev-doc|todo-manage|www)'
 option.migrate-branches: teeda-1.0.11,teeda-1.0.12
 option.no-migrate-tags: 1
