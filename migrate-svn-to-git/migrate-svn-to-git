@@ -153,11 +153,13 @@ _EOF_
     MIGRATE_SCRIPT="${PROJECT_WORK_DIR}/migrate-run"
     cat << _EOF_ > "${MIGRATE_SCRIPT}"
 #!/bin/sh
+#
+$(cat "${CONFIG_FILE}" | sed 's/^/# /g')
 
 _EOF_
 
     # create git repository directory
-    cat << _EOF_ > "${MIGRATE_SCRIPT}"
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 if [[ -d "${PROJECT_WORK_GIT_DIR}" ]]; then
     echo "git repository exists: ${PROJECT_WORK_GIT_DIR}"
     exit 1
@@ -169,6 +171,12 @@ pushd "${PROJECT_WORK_GIT_DIR}"
 _EOF_
 
     # git svn init
+    if [[ ${IS_NO_MIGRATE_BRANCHES} -eq 1 ]]; then
+        BRANCHES="dummy/branches"
+    fi
+    if [[ ${IS_NO_MIGRATE_TAGS} -eq 1 ]]; then
+        TAGS="dummy/tags"
+    fi
     cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # git svn init
 git svn init \\
