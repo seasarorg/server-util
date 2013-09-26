@@ -69,7 +69,7 @@ get_config() {
     PARAMETER_NAME="${2}"
     IS_REQUIRED="${3:-0}"
 
-    get_config=$(cat ${CONFIG_FILE} | egrep "^${PARAMETER_NAME}" | awk '{ print $2 }')
+    get_config=$(cat ${CONFIG_FILE} | egrep "^${PARAMETER_NAME}" | head -1 | awk '{ print $2 }')
     debug "${PARAMETER_NAME}: ${get_config}"
 
     if [[ ${IS_REQUIRED} -eq 1 ]] && [[ -z ${get_config} ]]; then
