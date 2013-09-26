@@ -1,0 +1,7 @@
+committer-name: yone098
+name: s2jsf-www
+svnroot: https://www.seasar.org/svn/s2jsf/
+trunk: trunk/www
+tags: tags
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1
