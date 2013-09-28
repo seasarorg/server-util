@@ -1,0 +1,6 @@
+committer-name: azusa
+name: s2dao
+svnroot: https://www.seasar.org/svn/s2dao/
+trunk: branches/s2dao-1.0.x
+ignore-paths: '^trunk'
+option.no-migrate-tags: 1

@@ -1,0 +1,7 @@
+committer-name: y-komori
+name: eclipse-common
+svnroot: https://www.seasar.org/svn/sandbox/eclipsecommon/
+trunk: trunk
+ignore-paths: '^trunk/www'
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1
