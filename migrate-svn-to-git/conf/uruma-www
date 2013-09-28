@@ -1,0 +1,6 @@
+committer-name: y-komori
+name: uruma-www
+svnroot: https://www.seasar.org/svn/sandbox/uruma/
+trunk: trunk/www
+option.replace-empty-commit-messages: 1
+option.no-migrate-branches: 1

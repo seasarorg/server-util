@@ -1,0 +1,7 @@
+committer-name: y-komori
+name: maven-eclipath-plugin
+svnroot: https://www.seasar.org/svn/sandbox/uruma/
+trunk: trunk/maven-eclipath-plugin
+tags: tags/maven-eclipath-plugin
+option.replace-empty-commit-messages: 1
+option.no-migrate-branches: 1
