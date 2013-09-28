@@ -4,7 +4,7 @@
 
 ARGS_MESSAGES="$1"
 
-MESSAGES=${ARGS_MESSAGES:-'<empty commit message>'}
+export EMPTY_MESSAGES=${ARGS_MESSAGES:-'<empty commit message>'}
 
 # replace empty commit messages
 echo "replace empty commit messages"
@@ -13,5 +13,5 @@ read msg
 if [[ -n "${msg}" ]]; then
     echo "${msg}"
 else
-    echo "${MESSAGES}"
+    echo "${EMPTY_MESSAGES}"
 fi' -f -- --all
