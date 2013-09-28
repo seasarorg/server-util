@@ -1,0 +1,7 @@
+committer-name: jflute
+name: dbflute-www
+svnroot: https://www.seasar.org/svn/dbflute/
+trunk: trunk/www
+ignore-paths: '\.jar$|\.war$|\.zip$'
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1
