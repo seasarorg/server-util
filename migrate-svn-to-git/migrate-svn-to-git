@@ -69,7 +69,7 @@ get_config() {
     PARAMETER_NAME="${2}"
     IS_REQUIRED="${3:-0}"
 
-    get_config=$(cat ${CONFIG_FILE} | egrep "^${PARAMETER_NAME}" | head -1 | awk '{ print $2 }')
+    get_config=$(cat ${CONFIG_FILE} | egrep "^${PARAMETER_NAME}:" | cut -d ":" -f 2- | sed "s/^ *//")
     debug "${PARAMETER_NAME}: ${get_config}"
 
     if [[ ${IS_REQUIRED} -eq 1 ]] && [[ -z ${get_config} ]]; then
@@ -182,8 +182,27 @@ _EOF_
 # git svn init
 git svn init \\
 --trunk=${TRUNK} \\
---branches=${BRANCHES} \\
---tags=${TAGS} \\
+_EOF_
+
+    # exapnd branches
+    for i in ${BRANCHES}
+    do
+       BRANCHE="${i}"
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+--branches=${BRANCHE} \\
+_EOF_
+    done
+
+    # exapnd tags
+    for i in ${TAGS}
+    do
+        TAG="${i}"
+        cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+--tags=${TAG} \\
+_EOF_
+    done
+
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 --ignore-paths=${IGNORE_PATHS} \\
 ${SVNROOT}
 
