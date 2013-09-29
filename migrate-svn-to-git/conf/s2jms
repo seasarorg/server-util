@@ -2,4 +2,5 @@ committer-name: koichik
 name: s2jms
 svnroot: https://www.seasar.org/svn/s2jms/
 trunk: trunk
+ignore-paths: '^trunk/www'
 option.no-migrate-tags: 1

@@ -2,4 +2,5 @@ committer-name: koichik
 name: s2remoting
 svnroot: https://www.seasar.org/svn/s2remoting/
 trunk: trunk
+ignore-paths: '^trunk/www'
 option.no-migrate-tags: 1

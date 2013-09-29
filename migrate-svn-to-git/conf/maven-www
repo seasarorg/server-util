@@ -1,5 +1,4 @@
 committer-name: koichik
-name: maven
+name: maven-www
 svnroot: https://www.seasar.org/svn/maven/
-trunk: trunk
-ignore-paths: '^trunk/www'
+trunk: trunk/www

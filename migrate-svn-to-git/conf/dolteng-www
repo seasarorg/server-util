@@ -1,5 +1,4 @@
 committer-name: koichik
-name: dolteng
+name: dolteng-www
 svnroot: https://www.seasar.org/svn/sandbox/dolteng/
-trunk: trunk
-ignore-paths: '^trunk/www'
+trunk: trunk/www

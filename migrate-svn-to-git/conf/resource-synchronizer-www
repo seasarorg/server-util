@@ -1,5 +1,4 @@
 committer-name: koichik
-name: resource-synchronizer
+name: resource-synchronizer-www
 svnroot: https://www.seasar.org/svn/sandbox/resourcesynchronizer/
-trunk: trunk
-ignore-paths: '^trunk/www'
+trunk: trunk/www
