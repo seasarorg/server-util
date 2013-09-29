@@ -1,7 +1,7 @@
 committer-name: koichik
 name: diigu
 svnroot: https://www.seasar.org/svn/s2container/
-trunk: trunk
+trunk: trunk/diigu
 ignore-paths: '^trunk/(?!diigu)|^branches'
 option.no-migrate-branches: 1
 option.no-migrate-tags: 1
