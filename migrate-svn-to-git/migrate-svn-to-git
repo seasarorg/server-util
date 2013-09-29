@@ -138,10 +138,11 @@ migrate_repository() {
 
     # create author file for project
     PROJECT_AUTHOR_FILE="${PROJECT_WORK_DIR}/authors.txt"
-    cat << '_EOF_' > ${PROJECT_AUTHOR_FILE}
-httpd = The Seasar Project Administrator <admin@seasar.org>
-apache = The Seasar Project Administrator <admin@seasar.org>
-_EOF_
+    get_author_info "httpd"
+    echo "${get_author_info}" >> ${PROJECT_AUTHOR_FILE}
+    get_author_info "apache"
+    echo "${get_author_info}" >> ${PROJECT_AUTHOR_FILE}
+
     for i in ${PROJECT_MEMBER_LIST}
     do
         MEMBER_UID="${i}"
