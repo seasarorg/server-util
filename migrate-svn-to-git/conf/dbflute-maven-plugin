@@ -1,0 +1,11 @@
+committer-name: jflute
+name: dbflute
+svnroot: https://www.seasar.org/svn/dbflute/
+trunk: trunk
+tags: tags
+branches: branches
+ignore-paths: '^trunk/(?!dbflute/|dbflute-runtime/)|\.jar$|\.war$|\.zip$'
+option.replace-empty-commit-messages: 1
+option.replace-empty-commit-messages.string: accident empty commit
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1

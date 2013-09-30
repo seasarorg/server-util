@@ -1,0 +1,11 @@
+committer-name: jflute
+name: dbflute-emecha
+svnroot: https://www.seasar.org/svn/sandbox/emecha
+trunk: trunk
+tags: tags
+branches: branches
+ignore-paths: '^trunk/www'
+option.replace-empty-commit-messages: 1
+option.replace-empty-commit-messages.string: accident empty commit
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1
