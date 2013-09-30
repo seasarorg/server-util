@@ -1,7 +1,7 @@
 committer-name: jflute
 name: dbflute-utflute
-svnroot: https://www.seasar.org/svn/dbflute/trunk/utflute/
-trunk: trunk
+svnroot: https://www.seasar.org/svn/dbflute/
+trunk: trunk/utflute
 tags: tags
 branches: branches
 ignore-paths: '\.jar$|\.war$|\.zip$'
