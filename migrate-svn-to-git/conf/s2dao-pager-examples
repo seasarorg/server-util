@@ -3,3 +3,4 @@ name: s2dao-pager-examples
 svnroot: https://www.seasar.org/svn/s2dao/
 trunk: branches/s2dao-pager-examples-1.0.x
 option.no-migrate-tags: 1
+option.no-migrate-branches: 1

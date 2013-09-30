@@ -2,3 +2,5 @@ committer-name: azusa
 name: s2dao-www
 svnroot: https://www.seasar.org/svn/s2dao/
 trunk: trunk/www
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1
