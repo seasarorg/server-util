@@ -1,10 +1,10 @@
 committer-name: jflute
 name: dbflute-utflute
-svnroot: https://www.seasar.org/svn/dbflute
+svnroot: https://www.seasar.org/svn/dbflute/trunk/utflute/
 trunk: trunk
 tags: tags
 branches: branches
-ignore-paths: '^trunk/(?!utflute)|\.jar$|\.war$|\.zip$'
+ignore-paths: '\.jar$|\.war$|\.zip$'
 option.replace-empty-commit-messages: 1
 option.replace-empty-commit-messages.string: accident empty commit
 option.no-migrate-tags: 1
