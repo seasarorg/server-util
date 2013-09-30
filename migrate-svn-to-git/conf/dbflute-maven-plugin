@@ -6,3 +6,5 @@ tags: tags
 branches: branches
 option.replace-empty-commit-messages: 1
 option.replace-empty-commit-messages.string: accident empty commit
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1
