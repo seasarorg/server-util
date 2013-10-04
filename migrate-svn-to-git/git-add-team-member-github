@@ -36,4 +36,4 @@ if [[ -z "${TEAM_ID}" ]]; then
 fi
 
 echo "[add team member to ${TEAM_NAME} (ID: ${TEAM_ID})]"
-curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/teams/${TEAM_ID}/members/${MEMBER_NAME}" -X PUT
+curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/teams/${TEAM_ID}/members/${MEMBER_NAME}" -X PUT -d ""
