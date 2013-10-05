@@ -320,8 +320,9 @@ popd
 _EOF_
     chmod 700 "${MIGRATE_SCRIPT}"
 
+    MIGRATE_SCRIPT_LOG="${PROJECT_WORK_DIR}/migrate-run.log"
     echo "# ${REPOSITORY_NAME} migration script:"
-    echo "${MIGRATE_SCRIPT}"
+    echo "${MIGRATE_SCRIPT} > ${MIGRATE_SCRIPT_LOG} 2>&1"
 #    cat "${MIGRATE_SCRIPT}"
 }
 
