@@ -3,7 +3,7 @@
 # @author Jun Futagawa
 
 TEAM_NAME="$1"
-MEMBER_NAME="$2"
+MEMBERS="$2"
 
 if [[ -z "${GITHUB_USER}" ]]; then
     echo "GITHUB_USER need to be set."
@@ -17,8 +17,8 @@ if [[ -z "${GITHUB_PASS}" ]]; then
     exit 1
 fi
 
-if [[ -z "${MEMBER_NAME}" ]]; then
-    echo $0 TEAM_NAME MEMBER_NAME
+if [[ -z "${MEMBERS}" ]]; then
+    echo $0 TEAM_NAME MEMBERS
     exit 1
 fi
 
@@ -36,4 +36,10 @@ if [[ -z "${TEAM_ID}" ]]; then
 fi
 
 echo "[add team member to ${TEAM_NAME} (ID: ${TEAM_ID})]"
-curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/teams/${TEAM_ID}/members/${MEMBER_NAME}" -X PUT -d ""
+IFS=',
+'
+for i in ${MEMBERS}
+do
+    MEMBER="${i}"
+    curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/teams/${TEAM_ID}/members/${MEMBER}" -X PUT -d ""
+done
