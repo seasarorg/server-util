@@ -1,0 +1,6 @@
+committer-name: jfut
+name: ymir-design
+svnroot: https://www.seasar.org/svn/ymir/
+trunk: design/trunk
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1
