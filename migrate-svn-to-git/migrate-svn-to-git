@@ -81,7 +81,7 @@ get_config() {
 get_author_info() {
     MEMBER_UID="${1}"
 
-    GIT_USER=$(grep "${MEMBER_UID}" "${ALL_AUTHORS_FILE}")
+    GIT_USER=$(egrep "^${MEMBER_UID} =" "${ALL_AUTHORS_FILE}")
     if [[ -z "${GIT_USER}" ]]; then
         get_author_info="${MEMBER_UID} = ${MEMBER_UID} <${MEMBER_UID}@${PROJECT_SVN_UUID}>"
     else
