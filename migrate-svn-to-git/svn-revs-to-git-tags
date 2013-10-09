@@ -11,10 +11,34 @@ function debug() {
     fi
 }
 
+TAG_LIST_FILE="$1"
+
+if [[ -z "${TAG_LIST_FILE}" ]]; then
+    cat << _EOF_
+Usage: $0 TAG_LIST_FILE
+
+Format:
+    SVN_REVISION_1 TAG_NAME_1
+    SVN_REVISION_2 TAG_NAME_2
+    SVN_REVISION_3 TAG_NAME_3
+    ...
+
+ex)
+4400 Seasar2.4.40
+4433 Seasar2.4.41
+4452 Seasar2.4.42
+4468 Seasar2.4.43
+4492 Seasar2.4.44
+4501 Seasar2.4.45
+4508 Seasar2.4.46
+_EOF_
+    exit 1
+fi
+
 IFS='
 '
 
-TAG_LIST=`cat $1`
+TAG_LIST=$(cat ${TAG_LIST_FILE})
 for i in ${TAG_LIST}
 do
     PARENT_SVN_COMMIT_ID=$(echo ${i} | cut -d ' ' -f 1)
