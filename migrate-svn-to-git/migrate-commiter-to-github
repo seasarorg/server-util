@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# @author Jun Futagawa
+
+SCRIPT="$(basename "${0}")"
+SCRIPT_DIR="$(dirname ${0})"
+CONF_DIR="${SCRIPT_DIR}/conf"
+WORK_DIR="${SCRIPT_DIR}/work"
+
+# seasar.org name:github account name
+ACCOUNT_LIST="${WORK_DIR}/all-account.txt"
+
+PROJECT_NAME="$1"
+
+if [[ -z "${PROJECT_NAME}" ]]; then
+    echo $0 PROJECT_NAME
+    exit 1
+fi
+
+# Project Information
+PROJECT_JSON_URL="https://www.seasar.org/members/project/${PROJECT_NAME}/json"
+PROJECT_MEMBER_LIST=$(curl -s ${PROJECT_JSON_URL} | jq -r ".memberUid[]")
+
+if [[ -z "${PROJECT_MEMBER_LIST}" ]]; then
+    echo "${PROJECT_NAME} not found."
+    exit 1
+fi
+
+echo "${SCRIPT_DIR}/git-create-team-github ${PROJECT_NAME}"
+
+MEMBERS=""
+for i in ${PROJECT_MEMBER_LIST}
+do
+    USER_NAME="${i}"
+    GITHUB_USER_NAME=$(egrep "^${USER_NAME}:" "${ACCOUNT_LIST}" | cut -d":" -f 2)
+    if [[ ! -z "${GITHUB_USER_NAME}" ]]; then
+        if [[ -z "${MEMBERS}" ]]; then
+            MEMBERS="${GITHUB_USER_NAME}"
+        else
+            MEMBERS="${MEMBERS},${GITHUB_USER_NAME}"
+        fi
+    fi
+done
+
+if [[ ! -z "${MEMBERS}" ]]; then
+    echo "${SCRIPT_DIR}/git-add-team-member-github ${PROJECT_NAME} ${MEMBERS}"
+fi
