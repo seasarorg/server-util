@@ -1,0 +1,6 @@
+committer-name: jfut
+name: sa-struts-blank
+svnroot: https://www.seasar.org/svn/sastruts/
+trunk: trunk/sa-struts-blank
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1
