@@ -28,7 +28,7 @@ else
     GITHUB_ROOT="orgs/${GITHUB_ORGS}"
 fi
 
-TEAM_ID=$(curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/teams" | jq ".[] | select(.name == \"${TEAM_NAME}\").id")
+TEAM_ID=$(curl -s -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/teams" | jq ".[] | select(.name == \"${TEAM_NAME}\").id")
 if [[ ! -z "${TEAM_ID}" ]]; then
     echo "${TEAM_NAME} already exists."
     exit 1
@@ -36,4 +36,4 @@ fi
 
 echo "[add a team: ${TEAM_NAME}]"
 CREATE_JSON="{\"name\":\"${TEAM_NAME}\", \"permission\":\"admin\"}"
-curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/teams" -d "${CREATE_JSON}"
+curl -s -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/teams" -d "${CREATE_JSON}"

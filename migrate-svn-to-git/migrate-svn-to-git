@@ -117,6 +117,7 @@ migrate_repository() {
     get_config "${CONFIG_FILE}" "option.no-prune-empty"          ; IS_NO_PRUNE_EMTPY=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-migrate-branches"     ; IS_NO_MIGRATE_BRANCHES=${get_config:-0}
     get_config "${CONFIG_FILE}" "option.no-migrate-tags"         ; IS_NO_MIGRATE_TAGS=${get_config:-0}
+    get_config "${CONFIG_FILE}" "option.description.suffix"      ; DESCRIPTION_SUFFIX=${get_config:-""}
 
     # SVN Information
     PROJECT_SVN_UUID=$(svn info ${SVNROOT} | grep UUID | awk '{ print $3 }')
@@ -124,8 +125,15 @@ migrate_repository() {
     # Project Information
     PROJECT_NAME=$(echo ${SVNROOT} | egrep -o "svn/(sandbox/)?.*" | sed "s/\/sandbox//g" | cut -d'/' -f 2)
     PROJECT_JSON_URL="https://www.seasar.org/members/project/${PROJECT_NAME}/json"
-    PROJECT_LEADER=$(curl -s ${PROJECT_JSON_URL} | jq -r ".projectDescription.leader")
-    PROJECT_MEMBER_LIST=$(curl -s ${PROJECT_JSON_URL} | jq -r ".memberUid[]")
+
+    PROJECT_JSON=$(curl -s ${PROJECT_JSON_URL})
+    PROJECT_LEADER=$(echo ${PROJECT_JSON} | jq -r ".projectDescription.leader")
+    PROJECT_MEMBER_LIST=$(echo ${PROJECT_JSON} | jq -r ".memberUid[]")
+    PROJECT_DESCRIPTION=$(echo ${PROJECT_JSON} | jq -r ".projectDescription.name")
+    if [ ! -z "${DESCRIPTION_SUFFIX}" ]; then
+        PROJECT_DESCRIPTION="${PROJECT_DESCRIPTION} ${DESCRIPTION_SUFFIX}"
+    fi
+    PROJECT_HOMEPAGE=$(echo ${PROJECT_JSON} | jq -r ".projectDescription.url")
 
     #
     # output
@@ -248,9 +256,8 @@ _EOF_
     if [[ ${IS_NO_CONVERT_GIT_STYLE_TAG} -eq 0 ]]; then
         cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # svn tags to git tags
-${SCRIPT_DIR}/svn-tags-to-git-tags > tmp-run
-sh tmp-run
-rm -f tmp-run
+${SCRIPT_DIR}/svn-tags-to-git-tags > "${PROJECT_WORK_DIR}/migrate-tag-run"
+sh "${PROJECT_WORK_DIR}/migrate-tag-run"
 
 _EOF_
     fi
@@ -282,10 +289,18 @@ ${SCRIPT_DIR}/git-filter-prune-empty
 _EOF_
     fi
 
+    # create team and add members
+    cat << _EOF_ >> "${MIGRATE_SCRIPT}"
+# create team and add members
+${SCRIPT_DIR}/migrate-commiter-to-github ${PROJECT_NAME} > "${PROJECT_WORK_DIR}/migrate-team-run"
+sh "${PROJECT_WORK_DIR}/migrate-team-run"
+
+_EOF_
+
     # create repository
     cat << _EOF_ >> "${MIGRATE_SCRIPT}"
 # create repository
-${SCRIPT_DIR}/git-create-repo-github ${REPOSITORY_NAME}
+${SCRIPT_DIR}/git-create-repo-github "${REPOSITORY_NAME}" "${PROJECT_DESCRIPTION}" "${PROJECT_HOMEPAGE}" "${PROJECT_NAME}"
 
 _EOF_
 

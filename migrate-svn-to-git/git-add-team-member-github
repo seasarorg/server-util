@@ -29,7 +29,7 @@ else
     GITHUB_ROOT="orgs/${GITHUB_ORGS}"
 fi
 
-TEAM_ID=$(curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/teams" | jq ".[] | select(.name == \"${TEAM_NAME}\").id")
+TEAM_ID=$(curl -s -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/teams" | jq ".[] | select(.name == \"${TEAM_NAME}\").id")
 if [[ -z "${TEAM_ID}" ]]; then
     echo "${TEAM_NAME} not found"
     exit 1
@@ -41,5 +41,5 @@ IFS=',
 for i in ${MEMBERS}
 do
     MEMBER="${i}"
-    curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/teams/${TEAM_ID}/members/${MEMBER}" -X PUT -d ""
+    curl -s -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/teams/${TEAM_ID}/members/${MEMBER}" -X PUT -d ""
 done

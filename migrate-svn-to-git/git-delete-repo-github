@@ -32,5 +32,5 @@ echo "[delete a repository on ${GITHUB_ROOT}]"
 
 for REPOSITORY in ${@}; do
     echo "[delete ${REPOSITORY} repository]"
-    curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/${REPOSITORY}" -X DELETE
+    curl -s -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/${REPOSITORY}" -X DELETE
 done

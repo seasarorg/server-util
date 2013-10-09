@@ -4,6 +4,9 @@
 
 REPOSITORY_NAME="$1"
 DESCRIPTION="$2"
+HOMEPAGE="$3"
+TEAM_NAME="$4"
+
 if [[ -z "${DESCRIPTION}" ]]; then
     DESCRIPTION=${REPOSITORY_NAME}
 fi
@@ -27,11 +30,13 @@ fi
 
 GITHUB_ROOT=""
 if [[ -z "${GITHUB_ORGS}" ]]; then
-    GITHUB_ROOT="users/${GITHUB_USER}/repos"
+    GITHUB_ROOT="users/${GITHUB_USER}"
 else
-    GITHUB_ROOT="orgs/${GITHUB_ORGS}/repos"
+    GITHUB_ROOT="orgs/${GITHUB_ORGS}"
 fi
 
+TEAM_ID=$(curl -s -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/teams" | jq ".[] | select(.name == \"${TEAM_NAME}\").id")
+
 echo "[create repository to ${GITHUB_ROOT}]"
-CREATE_JSON="{\"name\":\"${REPOSITORY_NAME}\", \"description\":\"${DESCRIPTION}\"}"
-curl -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}" -d "${CREATE_JSON}"
+CREATE_JSON="{\"name\":\"${REPOSITORY_NAME}\", \"description\":\"${DESCRIPTION}\", \"homepage\":\"${HOMEPAGE}\", \"team_id\":\"${TEAM_ID}\"}"
+curl -s -u "${GITHUB_USER}:${GITHUB_PASS}" "https://api.github.com/${GITHUB_ROOT}/repos" -d "${CREATE_JSON}"
