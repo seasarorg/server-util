@@ -1,0 +1,8 @@
+committer-name: jfut
+name: ymir-eclipse
+svnroot: https://www.seasar.org/svn/ymir/
+trunk: eclipse/trunk
+tags: eclipse/tags
+branches: eclipse/branches
+option.no-migrate-branches: 1
+option.no-migrate-tags: 1

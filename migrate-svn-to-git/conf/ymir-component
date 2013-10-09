@@ -2,5 +2,5 @@ committer-name: jfut
 name: ymir-component
 svnroot: https://www.seasar.org/svn/ymir/
 trunk: component/trunk
-tags: component/tags \
+tags: component/tags
 branches: component/branches

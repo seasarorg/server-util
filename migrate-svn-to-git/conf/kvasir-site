@@ -1,0 +1,8 @@
+committer-name: jfut
+name: kvasir-site
+svnroot: https://www.seasar.org/svn/sandbox/kvasir/
+trunk: site/trunk
+tags: site/tags
+branches: site/branches
+option.no-migrate-tags: 1
+option.no-migrate-branches: 1

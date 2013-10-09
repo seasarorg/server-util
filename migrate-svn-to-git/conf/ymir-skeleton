@@ -1,0 +1,7 @@
+committer-name: jfut
+name: ymir-skeleton
+svnroot: https://www.seasar.org/svn/ymir/
+trunk: skeleton/trunk
+tags: skeleton/tags
+branches: skeleton/branches
+option.no-migrate-tags: 1

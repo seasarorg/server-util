@@ -1,0 +1,8 @@
+committer-name: jfut
+name: cms
+svnroot: https://www.seasar.org/svn/sandbox/cms/
+trunk: trunk
+tags: tags
+branches: branches
+ignore-paths: '^trunk/www'
+option.no-migrate-tags: 1
